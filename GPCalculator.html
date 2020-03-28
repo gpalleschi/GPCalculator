@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>GPCalculator 1.0</title>
+   <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+	 <style>
+     html, body {
+       height: 100%;
+       margin: 0;
+     }
+
+     body {
+       background: black;
+       align-items: center;
+       justify-content: center;
+     }
+
+     #dispCalcT {
+       grid:grid;
+       grid-template-columns: 1fr;
+       width: 100%;
+       height:10%;
+       row-gap: 5pt;
+       border-width: 5pt;
+       border-color: white;
+       color: rgb(0, 218, 0);
+       text-align: right;
+       font: bold 30px Arial;
+       white-space: pre;
+       background-color: rgb(120, 123, 126);
+     }
+
+     #dispCalc {
+       grid:grid;
+       grid-template-columns: 1fr;
+       grid-gap: 2pt;
+       width: 100%;
+       height:10%;align-self: auto;
+       font: bold 90px Orbitron;
+       color: rgb(0, 218, 0);
+       padding-right: 1pt;
+       padding-bottom: 25pt;
+       border-color: white;
+       text-align: right;
+       white-space: pre;
+       background-color: rgb(120, 123, 126);
+     }
+
+
+    /* Calculator */
+    #calc {
+       display: grid;
+       grid-template-columns: 1fr 1fr 1fr 1fr;
+       grid-template-rows: 1fr 1fr 1fr 1fr;
+       grid-gap: 5px;
+       border-color: black;
+       font-weight: bold;
+     }
+
+     /* Button css */
+     #btnCalc {
+       background: "grey";
+       text-align: center;
+       font: bold 70px Arial;
+       border-width: 1px;
+     }
+
+     #btnCalc:hover {
+       background-color :slategrey;
+     }
+
+     .btnDel {
+       grid-column-start : 3;
+       grid-column-end : 5;
+     }
+
+     .btnRes {
+       grid-column-start : 1;
+       grid-column-end : 3;
+     }
+
+  </style>
+</head>
+<body>
+  <div id="dispCalcT"></div>
+  <div id="dispCalc"></div>
+  <div id="calc"></div>
+	<script>
+
+    var valCalc = ["7","8","9","*","4","5","6","-","1","2","3","+","+-","0",".","/","=","canc"];
+    var bCalc = document.getElementById("calc");
+    var bDispT = document.getElementById("dispCalcT");
+    var bDisp = document.getElementById("dispCalc");
+    var lastKey = "";
+    var calc = 0;
+    bDisp.innerHTML = "0";
+
+    for (var x=0;x<valCalc.length;x++) {
+      var element = document.createElement("button");
+      //Assign different attributes to the element. 
+      element.innerHTML = valCalc[x];  
+      element.id="btnCalc";
+      if ( valCalc[x] == "canc" ) {
+        element.className="btnDel";
+      } 
+      if ( valCalc[x] == "=" ) {
+        element.className="btnRes";
+      } 
+      element.value=valCalc[x]; 
+      element.onclick = function() { // Note this is a function
+        if ( this.value == "canc" ) {
+          bDispT.innerHTML = "";
+          bDisp.innerHTML = "0";
+        } else {
+          if ( lastKey == "=" ) {
+             bDispT.innerHTML = "";
+          } 
+          if ( this.value == "+-" ) {
+            if ( bDisp.innerHTML[0] == "-" ) {
+              bDisp.innerHTML = bDisp.innerHTML.substr(1);
+            } else {
+              bDisp.innerHTML = "-" + bDisp.innerHTML;
+            }
+          }
+          else {
+            if ( this.value == "." && bDisp.innerHTML.indexOf(".") != -1 ) {
+            } else {
+              if ( (this.value == "+" || this.value == "-" || this.value == "/" || this.value == "*") ) {
+                 bDispT.innerHTML = bDispT.innerHTML + bDisp.innerHTML + this.value;
+                 bDisp.innerHTML = "0";
+              } else {
+                if ( this.value == "=" ) {
+                  bDispT.innerHTML=bDispT.innerHTML+bDisp.innerHTML;
+                  bDisp.innerHTML=eval(bDispT.innerHTML);
+                  bDispT.innerHTML=bDispT.innerHTML+this.value;
+                } else {
+                  if ( bDisp.innerHTML == "0" ) {
+                     bDisp.innerHTML=this.value;
+                  } else {
+                     bDisp.innerHTML=bDisp.innerHTML+this.value;
+                  }
+                }
+              }
+            }
+          }
+        }
+        lastKey = this.value;
+      };
+      bCalc.appendChild(element);
+    }
+	</script>
+</body>
+</html>
